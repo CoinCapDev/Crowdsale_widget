@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html> 
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular-qrcode/angular-qrcode.js"></script>
+	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>	
+	<script src="bower_components/qrcode-generator/js/qrcode.js"></script>
+	<script src="bower_components/qrcode-generator/js/qrcode_UTF8.js"></script>
+	<script src="bower_components/angular-qrcode/angular-qrcode.js"></script>
+	<script src="js/app.js"></script>
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/style.css">
+	
+	<title>BitCrystal Crowdsale</title>
+	
+  </head>
+  <body ng-app="ss-widget">
+	  <div class="container" ng-controller="coinTrader">
+		  <form ng-submit="submit()">
+			  <div class="modal-header">
+				  <div class="top clearfix" style="margin-bottom:15px;">
+				  		<h4 class="pull-left page-title" style="margin-top:0;">BitCrystal Crowdsale</h4>
+					  <div class="rate pull-right">
+						  <label>Rate</label> <span ng-hide="rate.rate == 'TBD'">{{rate.rate}}</span><span ng-show="rate.rate == 'TBD'">{{rate.countdownD | number:0}} day<span ng-show="rate.countdownD > 0">s</span></span>
+					  </div>
+				  </div>
+				  <div class="coin-selector" ng-class="{'disabled': status == 'pending' || status == 'complete'}">
+				    <div class="input-group">
+				      <div class="input-group-btn">
+						  <button class="btn btn-default dropdown-toggle coin-button" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						    <span ng-show="selectedCoin"><img width="30" ng-src="{{coins[selectedCoin].image}}"> {{ selectedCoin }}</span> 
+						    <span ng-hide="selectedCoin"><strong>Pay for BitCrystals with</strong></span>
+						    <span class="caret"></span>
+						  </button>
+						  <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+						    <li ng-repeat="coin in coins" class="col-md-4 col-sm-4 col-xs-6">
+						        <a ng-click="getMarketData(coin.symbol)"><img width="30" ng-src="{{coin.image}}"> {{coin.symbol}}</a>
+						    </li>
+						  </ul>
+				      </div><!-- /btn-group -->
+				      <input type="text" class="form-control amount" ng-model="form.amount" placeholder="Amount of Bitcoin you would like to spend">
+				      <span class="input-group-addon">
+				      	Amount of bitcrystals you will receive <strong><span ng-show="rate.rate">{{form.amount * rate.rateI | number:8}}</span><span ng-hide="form.amount">0</span></strong>
+				      </span>
+				    </div><!-- /input-group -->
+				  </div>
+	
+	
+	
+	
+			  </div>
+			  <div class="modal-body">
+				  <div class="form-fields" ng-hide="status == 'pending' || status == 'complete'">
+					  <div class="form-item">
+						  <label>Name</label>
+						  <input type="text" class="form-control" ng-model="form.name">
+					  </div>
+					  <div class="form-item">
+						  <label>Email</label>
+						  <input type="text" class="form-control" ng-model="form.email">
+					  </div>
+					  <div class="form-item">
+						  <label>Referral Code (Optional)</label>
+						  <input type="text" class="form-control" ng-model="form.userrefcode">
+					  </div>
+					  <div class="form-item">
+						  <label>Counterparty Address (Optional)</label>
+						  <input type="text" class="form-control" ng-model="form.userxcpaddress">
+					  </div>
+				  </div>
+				  <div class="info" ng-show="status == 'pending'">
+						<qrcode version="20" error-correction-level="H" size="200" data="{{QRcode}}"></qrcode>
+						<p>Please send <strong>{{depositAmount}} <img width="30" ng-src="{{coins[form.coinIn].image}}"> {{form.coinIn}}</strong> to {{deposit}}</p>
+						<div class="progress">
+						  <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: {{progress}}%">
+						    <span class="sr-only">45% Complete</span>
+						  </div>
+						</div>
+						<div class="progress-status">
+							<p>{{progressText}}</p>
+						</div>
+				  </div>
+				  <div class="success" ng-show="status == 'complete'">
+					  <span class="glyphicon glyphicon-ok"></span>
+					  <h1>Success</h1>
+					  <p>Thanks for you purchase.. an email will be sent with further instructions</p>
+				  </div>
+			  </div>
+			  
+			  <div class="modal-footer ng-scope">
+			  	<p class="powered-by pull-left" style="margin-top:8px;">Powered by <a href="https://shapeshift.io">ShapeShift <img src="https://shapeshift.io/fav_icon.png" width="20"></a></p>	
+			  	<button type="submit" class="btn btn-success"><span ng-hide="loading">Submit</span><span ng-show="loading"><img width="30" style="position: relative;top:-1px;" src="images/three-dots.svg"></span></button>
+			  </div>
+			</div>
+		</form>
+	  </div>
+	  
+	  
+	  
+	  
+  </body>
+</html>
